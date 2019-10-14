@@ -1,4 +1,4 @@
-# implicit-decoder
+# IM-NET
 The improved tensorflow code for paper "Learning Implicit Fields for Generative Shape Modeling", [Zhiqin Chen](https://www.sfu.ca/~zhiqinc/),  [Hao (Richard) Zhang](https://www.cs.sfu.ca/~haoz/).
 
 ### [project page](https://www.sfu.ca/~zhiqinc/imgan/Readme.html) |   [paper](https://arxiv.org/abs/1812.02822) |   [original implementation](https://github.com/czq142857/implicit-decoder) 
