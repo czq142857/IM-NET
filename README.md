@@ -9,14 +9,19 @@ The improved tensorflow code for paper "Learning Implicit Fields for Generative 
 
 ## Improvements
 Encoder:
+
 - In IM-AE (autoencoder), changed batch normalization to instance normalization.
+
 Decoder (=generator):
+
 - Changed the first layer from 2048-1024 to 1024-1024-1024.
 - Changed latent code size from 128 to 256.
 - Removed all skip connections.
 - Changed the last activation function from sigmoid to clip ( max(min(h, 1), 0) ).
+
 Training:
-- Training on the 13 shapenet categories as most Single-View Reconstruction networks do.
+
+- Training on the 13 ShapeNet categories as most Single-View Reconstruction networks do.
 - For each category, sort the object names and use the first 80% as training set, the rest as testing set, same as [AtlasNet](https://github.com/ThibaultGROUEIX/AtlasNet).
 - Sampled points in 256<sup>3</sup> voxels.
 - Remove data augmentation (image crops), same as [Occupancy Networks](https://github.com/autonomousvision/occupancy_networks).
@@ -45,8 +50,11 @@ Our code has been tested with Python 3.5, TensorFlow 1.8.0, CUDA 9.1 and cuDNN 7
 
 ## Datasets and Pre-trained weights
 The original voxel models are from [HSP](https://github.com/chaene/hsp).
+
 The rendered views are from [3D-R2N2](https://github.com/chrischoy/3D-R2N2).
+
 Since our network takes point-value pairs, the voxel models require further sampling.
+
 For data preparation, please see directory [point_sampling](https://github.com/czq142857/IM-NET/tree/master/point_sampling).
 
 We provide the ready-to-use datasets in hdf5 format, together with our pre-trained weights.
@@ -57,7 +65,7 @@ Backup links:
 
 - [IMAE&IMSVR (pwd: ayta)](https://pan.baidu.com/s/1gRylOMEj26U0lZ8CgbQ8Lg)
 
-We also provide pointcloud files with normal for the shapes in shapenet. The points are sampled from only the surface of the shapes. We use floodfilled 256<sup>3</sup> voxel files in [HSP](https://github.com/chaene/hsp) to determine whether a point is inside a shape or on its surface.
+We also provide pointcloud files with normal for the shapes in ShapeNet. The points are sampled from only the surface of the shapes. We use floodfilled 256<sup>3</sup> voxel files in [HSP](https://github.com/chaene/hsp) to determine whether a point is inside a shape or on its surface.
 
 - [pointcloud_surface](https://drive.google.com/open?id=16yiTtOrf6m4q9h3ZfhsG07JcAhLvZ0yk)
 
