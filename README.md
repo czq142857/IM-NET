@@ -73,7 +73,7 @@ Backup links:
 
 - [pointcloud_surface (pwd: lkux)](https://pan.baidu.com/s/140GVQa1DWdRUd-z0Rg4z1Q)
 
-The quantitative evalution results on the pointclouds mentioned above, comparing to [AtlasNet](https://github.com/ThibaultGROUEIX/AtlasNet) and [Occupancy Networks](https://github.com/autonomousvision/occupancy_networks), are as follows.
+The quantitative evaluation results on the pointclouds mentioned above, comparing to [AtlasNet](https://github.com/ThibaultGROUEIX/AtlasNet) and [Occupancy Networks](https://github.com/autonomousvision/occupancy_networks), are as follows.
 
 <img src='img/eval.png' />
 
