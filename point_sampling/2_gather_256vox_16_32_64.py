@@ -9,7 +9,6 @@ from multiprocessing import Process, Queue
 import queue
 import time
 #import mcubes
-#I had to use multi-thread 'cause my code is too f**king slow.
 
 class_name_list_all = [
 "02691156_airplane",
