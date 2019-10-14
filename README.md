@@ -21,11 +21,11 @@ Decoder (=generator):
 
 Training:
 
-- Training on the 13 ShapeNet categories as most Single-View Reconstruction networks do.
+- Trained one model on the 13 ShapeNet categories as most Single-View Reconstruction networks do.
 - For each category, sort the object names and use the first 80% as training set, the rest as testing set, same as [AtlasNet](https://github.com/ThibaultGROUEIX/AtlasNet).
 - Sampled points in 256<sup>3</sup> voxels.
-- Remove data augmentation (image crops), same as [Occupancy Networks](https://github.com/autonomousvision/occupancy_networks).
-- Add coarse-to-fine sampling for inference to speed up testing.
+- Removed data augmentation (image crops), same as [Occupancy Networks](https://github.com/autonomousvision/occupancy_networks).
+- Added coarse-to-fine sampling for inference to speed up testing.
 
 
 ## Citation
