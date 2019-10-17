@@ -75,12 +75,12 @@ Backup links:
 
 ## Evaluation results
 
-The quantitative evaluation results comparing to [AtlasNet](https://github.com/ThibaultGROUEIX/AtlasNet) and [Occupancy Networks](https://github.com/autonomousvision/occupancy_networks), are as follows.
+The quantitative evaluation results comparing to [AtlasNet](https://github.com/ThibaultGROUEIX/AtlasNet) and [Occupancy Networks](https://github.com/autonomousvision/occupancy_networks) are as follows.
 We report Chamfer Distance, Normal Consistency on the pointclouds mentioned above, and the Light Field Distance (LFD) produced by [LightField descriptor](https://github.com/Sunwinds/ShapeDescriptor/tree/master/LightField/3DRetrieval_v1.8/3DRetrieval_v1.8).
 
 <img src='img/eval.png' />
 
-(Note that [the code for LightField descriptor](https://github.com/Sunwinds/ShapeDescriptor/tree/master/LightField/3DRetrieval_v1.8/3DRetrieval_v1.8). is written in C and the executable only does closest shape retrieval according to the Light Field Distance. If you want to use it in your own experiments, you might need to change some lines to get the actual distance and recompile the code.)
+(Note that [the code for LightField descriptor](https://github.com/Sunwinds/ShapeDescriptor/tree/master/LightField/3DRetrieval_v1.8/3DRetrieval_v1.8) is written in C and the executable only does closest shape retrieval according to the Light Field Distance. If you want to use it in your own experiments, you might need to change some lines to get the actual distance and recompile the code.)
 
 
 ## Usage
