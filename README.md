@@ -48,7 +48,7 @@ Requirements:
 Our code has been tested with Python 3.5, TensorFlow 1.8.0, CUDA 9.1 and cuDNN 7.0 on Ubuntu 16.04 and Windows 10.
 
 
-## Datasets and Pre-trained weights
+## Datasets and pre-trained weights
 The original voxel models are from [HSP](https://github.com/chaene/hsp).
 
 The rendered views are from [3D-R2N2](https://github.com/chrischoy/3D-R2N2).
@@ -73,9 +73,14 @@ Backup links:
 
 - [pointcloud_surface (pwd: lkux)](https://pan.baidu.com/s/140GVQa1DWdRUd-z0Rg4z1Q)
 
-The quantitative evaluation results on the pointclouds mentioned above, comparing to [AtlasNet](https://github.com/ThibaultGROUEIX/AtlasNet) and [Occupancy Networks](https://github.com/autonomousvision/occupancy_networks), are as follows.
+## Evaluation results
+
+The quantitative evaluation results comparing to [AtlasNet](https://github.com/ThibaultGROUEIX/AtlasNet) and [Occupancy Networks](https://github.com/autonomousvision/occupancy_networks), are as follows.
+We report Chamfer Distance, Normal Consistency on the pointclouds mentioned above, and the Light Field Distance (LFD) produced by [LightField descriptor](https://github.com/Sunwinds/ShapeDescriptor/tree/master/LightField/3DRetrieval_v1.8/3DRetrieval_v1.8).
 
 <img src='img/eval.png' />
+
+(Note that [the code for LightField descriptor](https://github.com/Sunwinds/ShapeDescriptor/tree/master/LightField/3DRetrieval_v1.8/3DRetrieval_v1.8). is written in C and the executable only does closest shape retrieval according to the Light Field Distance. If you want to use it in your own experiments, you might need to change some lines to get the actual distance and recompile the code.)
 
 
 ## Usage
