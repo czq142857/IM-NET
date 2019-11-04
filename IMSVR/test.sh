@@ -1,1 +1,1 @@
-python main.py --train
+python main.py
