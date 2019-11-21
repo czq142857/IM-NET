@@ -38,7 +38,7 @@ for kkk in range(len(class_name_list)):
 	else:
 		output_shape_name_list = open(class_name_list[kkk]+'/'+class_name+"_vox256_img_test.txt", 'w')
 
-	input_txt_dir = voxel_input_dir+'16_32/'+class_name_list[kkk]+'/'+class_name+'_vox256.txt'
+	input_txt_dir = voxel_input_dir+'/'+class_name_list[kkk]+'/'+class_name+'_vox256.txt'
 	input_txt = open(input_txt_dir, 'r')
 	# this list is already sorted
 	input_list = input_txt.readlines()
@@ -85,7 +85,7 @@ for kkk in range(len(class_name_list)):
 	hdf5_file.create_dataset("values_64", [num_shapes,batch_size_3,1], np.uint8, compression=9)
 
 	counter = 0
-	input_txt_dir = voxel_input_dir+'16_32/'+class_name_list[kkk]+'/'+class_name+'_vox256.txt'
+	input_txt_dir = voxel_input_dir+'/'+class_name_list[kkk]+'/'+class_name+'_vox256.txt'
 	input_txt = open(input_txt_dir, 'r')
 	# this list is already sorted
 	input_list = input_txt.readlines()
@@ -101,19 +101,16 @@ for kkk in range(len(class_name_list)):
 	for i in range(target_len):
 		shape_name_list.append(input_list[start_len+i].strip())
 	
-	voxel_hdf5_dir1 = voxel_input_dir+'16_32/'+class_name_list[kkk]+'/'+class_name+'_vox256.hdf5'
-	voxel_hdf5_dir2 = voxel_input_dir+'64/'+class_name_list[kkk]+'/'+class_name+'_vox256.hdf5'
+	voxel_hdf5_dir1 = voxel_input_dir+'/'+class_name_list[kkk]+'/'+class_name+'_vox256.hdf5'
 	voxel_hdf5_file1 = h5py.File(voxel_hdf5_dir1, 'r')
 	voxel_hdf5_voxels = voxel_hdf5_file1['voxels'][:]
 	voxel_hdf5_points_16 = voxel_hdf5_file1['points_16'][:]
 	voxel_hdf5_values_16 = voxel_hdf5_file1['values_16'][:]
 	voxel_hdf5_points_32 = voxel_hdf5_file1['points_32'][:]
 	voxel_hdf5_values_32 = voxel_hdf5_file1['values_32'][:]
+	voxel_hdf5_points_64 = voxel_hdf5_file1['points_64'][:]
+	voxel_hdf5_values_64 = voxel_hdf5_file1['values_64'][:]
 	voxel_hdf5_file1.close()
-	voxel_hdf5_file2 = h5py.File(voxel_hdf5_dir2, 'r')
-	voxel_hdf5_points_64 = voxel_hdf5_file2['points_64'][:]
-	voxel_hdf5_values_64 = voxel_hdf5_file2['values_64'][:]
-	voxel_hdf5_file2.close()
 
 	image_hdf5_dir = img_input_dir+class_name_list[kkk]+'/'+class_name+'_img.hdf5'
 	image_hdf5_file = h5py.File(image_hdf5_dir, 'r')
