@@ -46,7 +46,7 @@ class IMAE(object):
 		if os.path.exists(self.data_dir+'/'+self.dataset_load+'.hdf5'):
 			self.data_dict = h5py.File(self.data_dir+'/'+self.dataset_load+'.hdf5', 'r')
 			self.data_points_int = self.data_dict['points_'+str(self.real_size)][:]
-			self.data_points = (self.data_points_int+0.5)/256-0.5
+			self.data_points = (self.data_points_int.astype(np.float32)+0.5)/256-0.5
 			self.data_values = self.data_dict['values_'+str(self.real_size)][:]
 			self.data_voxels = self.data_dict['voxels'][:]
 			if self.batch_size_input!=self.data_points.shape[1]:
@@ -146,6 +146,8 @@ class IMAE(object):
 			h6 = lrelu(linear(h5, self.gf_dim, 'h6_lin'))
 			h7 = linear(h6, 1, 'h7_lin')
 			h7 = tf.maximum(tf.minimum(h7, 1), 0)
+			#use this leaky activation function instead if you face convergence issues
+			#h7 = tf.maximum(tf.minimum(h7, h7*0.99+0.01), h7*0.01)
 			
 			return tf.reshape(h7, [batch_size,1])
 	
@@ -326,6 +328,34 @@ class IMAE(object):
 									frame_flag[pi,pj,pk] = 1
 									queue.append((pi,pj,pk))
 		return model_float
+	
+	#may introduce foldovers
+	def optimize_mesh(self, vertices, z, iteration = 3):
+		new_vertices = np.copy(vertices)
+		new_v_out = self.sess.run(self.zG,
+			feed_dict={
+				self.z_vector: z,
+				self.point_coord: new_vertices,
+			})
+		
+		for iter in range(iteration):
+			for i in [-1,0,1]:
+				for j in [-1,0,1]:
+					for k in [-1,0,1]:
+						if i==0 and j==0 and k==0: continue
+						offset = np.array([[i,j,k]],np.float32)/(self.real_size*6*2**iter)
+						current_vertices = vertices+offset
+						current_v_out = self.sess.run(self.zG,
+							feed_dict={
+								self.z_vector: z,
+								self.point_coord: current_vertices,
+							})
+						keep_flag = abs(current_v_out-self.sampling_threshold)<abs(new_v_out-self.sampling_threshold)
+						new_vertices = current_vertices*keep_flag+new_vertices*(1-keep_flag)
+						new_v_out = current_v_out*keep_flag+new_v_out*(1-keep_flag)
+			vertices = new_vertices
+		
+		return vertices
 
 	def test_interp(self, config):
 		could_load, checkpoint_counter = self.load(self.checkpoint_dir)
@@ -354,13 +384,15 @@ class IMAE(object):
 		for t in range(interp_size):
 			tmp_z = model_z2*t/(interp_size-1) + model_z1*(interp_size-1-t)/(interp_size-1)
 			model_float = self.z2voxel(tmp_z)
-			img1 = np.clip(np.amax(model_float, axis=0)*256, 0,255).astype(np.uint8)
-			img2 = np.clip(np.amax(model_float, axis=1)*256, 0,255).astype(np.uint8)
-			img3 = np.clip(np.amax(model_float, axis=2)*256, 0,255).astype(np.uint8)
-			cv2.imwrite(config.sample_dir+"/"+str(t)+"_1t.png",img1)
-			cv2.imwrite(config.sample_dir+"/"+str(t)+"_2t.png",img2)
-			cv2.imwrite(config.sample_dir+"/"+str(t)+"_3t.png",img3)
+			#img1 = np.clip(np.amax(model_float, axis=0)*256, 0,255).astype(np.uint8)
+			#img2 = np.clip(np.amax(model_float, axis=1)*256, 0,255).astype(np.uint8)
+			#img3 = np.clip(np.amax(model_float, axis=2)*256, 0,255).astype(np.uint8)
+			#cv2.imwrite(config.sample_dir+"/"+str(t)+"_1t.png",img1)
+			#cv2.imwrite(config.sample_dir+"/"+str(t)+"_2t.png",img2)
+			#cv2.imwrite(config.sample_dir+"/"+str(t)+"_3t.png",img3)
 			vertices, triangles = mcubes.marching_cubes(model_float, self.sampling_threshold)
+			vertices = (vertices-0.5)/self.real_size-0.5
+			#vertices = self.optimize_mesh(vertices,model_z)
 			write_ply(config.sample_dir+"/"+"out"+str(t)+".ply", vertices, triangles)
 			
 			print("[sample interpolation]")
@@ -386,14 +418,16 @@ class IMAE(object):
 			
 			model_float = self.z2voxel(model_z)
 			
-			img1 = np.clip(np.amax(model_float, axis=0)*256, 0,255).astype(np.uint8)
-			img2 = np.clip(np.amax(model_float, axis=1)*256, 0,255).astype(np.uint8)
-			img3 = np.clip(np.amax(model_float, axis=2)*256, 0,255).astype(np.uint8)
-			cv2.imwrite(config.sample_dir+"/"+str(t)+"_1t.png",img1)
-			cv2.imwrite(config.sample_dir+"/"+str(t)+"_2t.png",img2)
-			cv2.imwrite(config.sample_dir+"/"+str(t)+"_3t.png",img3)
+			#img1 = np.clip(np.amax(model_float, axis=0)*256, 0,255).astype(np.uint8)
+			#img2 = np.clip(np.amax(model_float, axis=1)*256, 0,255).astype(np.uint8)
+			#img3 = np.clip(np.amax(model_float, axis=2)*256, 0,255).astype(np.uint8)
+			#cv2.imwrite(config.sample_dir+"/"+str(t)+"_1t.png",img1)
+			#cv2.imwrite(config.sample_dir+"/"+str(t)+"_2t.png",img2)
+			#cv2.imwrite(config.sample_dir+"/"+str(t)+"_3t.png",img3)
 			
 			vertices, triangles = mcubes.marching_cubes(model_float, self.sampling_threshold)
+			vertices = (vertices-0.5)/self.real_size-0.5
+			#vertices = self.optimize_mesh(vertices,model_z)
 			write_ply(config.sample_dir+"/"+"out"+str(t)+".ply", vertices, triangles)
 			
 			print("[sample]")
@@ -434,14 +468,16 @@ class IMAE(object):
 		
 		for t in range(batch_z.shape[0]):
 			model_float = self.z2voxel(batch_z[t:t+1])
-			img1 = np.clip(np.amax(model_float, axis=0)*256, 0,255).astype(np.uint8)
-			img2 = np.clip(np.amax(model_float, axis=1)*256, 0,255).astype(np.uint8)
-			img3 = np.clip(np.amax(model_float, axis=2)*256, 0,255).astype(np.uint8)
-			cv2.imwrite(config.sample_dir+"/"+str(t)+"_1t.png",img1)
-			cv2.imwrite(config.sample_dir+"/"+str(t)+"_2t.png",img2)
-			cv2.imwrite(config.sample_dir+"/"+str(t)+"_3t.png",img3)
+			#img1 = np.clip(np.amax(model_float, axis=0)*256, 0,255).astype(np.uint8)
+			#img2 = np.clip(np.amax(model_float, axis=1)*256, 0,255).astype(np.uint8)
+			#img3 = np.clip(np.amax(model_float, axis=2)*256, 0,255).astype(np.uint8)
+			#cv2.imwrite(config.sample_dir+"/"+str(t)+"_1t.png",img1)
+			#cv2.imwrite(config.sample_dir+"/"+str(t)+"_2t.png",img2)
+			#cv2.imwrite(config.sample_dir+"/"+str(t)+"_3t.png",img3)
 			
 			vertices, triangles = mcubes.marching_cubes(model_float, self.sampling_threshold)
+			vertices = (vertices-0.5)/self.real_size-0.5
+			#vertices = self.optimize_mesh(vertices,model_z)
 			write_ply(config.sample_dir+"/"+"out"+str(t)+".ply", vertices, triangles)
 			
 			print("[sample GAN]")

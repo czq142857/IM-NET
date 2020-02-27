@@ -49,7 +49,7 @@ class IMSVR(object):
 		if os.path.exists(self.data_dir+'/'+self.dataset_load+'.hdf5'):
 			self.data_dict = h5py.File(self.data_dir+'/'+self.dataset_load+'.hdf5', 'r')
 			self.data_points_int = self.data_dict['points_'+str(self.real_size)][:]
-			self.data_points = (self.data_points_int+0.5)/256-0.5
+			self.data_points = (self.data_points_int.astype(np.float32)+0.5)/256-0.5
 			self.data_values = self.data_dict['values_'+str(self.real_size)][:]
 			self.data_pixel = self.data_dict['pixels'][:]
 			data_dict_z = h5py.File(pretrained_z_dir, 'r')
@@ -391,6 +391,35 @@ class IMSVR(object):
 									queue.append((pi,pj,pk))
 		return model_float
 	
+	#may introduce foldovers
+	def optimize_mesh(self, vertices, z, iteration = 3):
+		new_vertices = np.copy(vertices)
+		new_v_out = self.sess.run(self.zG,
+			feed_dict={
+				self.z_vector_test: z,
+				self.point_coord: new_vertices,
+			})
+		
+		for iter in range(iteration):
+			for i in [-1,0,1]:
+				for j in [-1,0,1]:
+					for k in [-1,0,1]:
+						if i==0 and j==0 and k==0: continue
+						offset = np.array([[i,j,k]],np.float32)/(self.real_size*6*2**iter)
+						current_vertices = vertices+offset
+						current_v_out = self.sess.run(self.zG,
+							feed_dict={
+								self.z_vector_test: z,
+								self.point_coord: current_vertices,
+							})
+						keep_flag = abs(current_v_out-self.sampling_threshold)<abs(new_v_out-self.sampling_threshold)
+						new_vertices = current_vertices*keep_flag+new_vertices*(1-keep_flag)
+						new_v_out = current_v_out*keep_flag+new_v_out*(1-keep_flag)
+			vertices = new_vertices
+		
+		return vertices
+		
+	
 	def test_interp(self, config):
 		self.saver = tf.train.Saver()
 		could_load, checkpoint_counter = self.load(self.checkpoint_dir)
@@ -430,6 +459,8 @@ class IMSVR(object):
 			tmp_z = model_z2*t/(interp_size-1) + model_z1*(interp_size-1-t)/(interp_size-1)
 			model_float = self.z2voxel(tmp_z)
 			vertices, triangles = mcubes.marching_cubes(model_float, self.sampling_threshold)
+			vertices = (vertices-0.5)/self.real_size-0.5
+			#vertices = self.optimize_mesh(vertices,model_z)
 			write_ply(add_out+str(t)+".ply", vertices, triangles)
 			print("[sample interpolation]")
 
@@ -476,6 +507,8 @@ class IMSVR(object):
 			cv2.imwrite(config.sample_dir+"/"+str(t)+"_v.png",img1)
 			'''
 			vertices, triangles = mcubes.marching_cubes(model_float, self.sampling_threshold)
+			vertices = (vertices-0.5)/self.real_size-0.5
+			#vertices = self.optimize_mesh(vertices,model_z)
 			write_ply(add_out+str(t)+".ply", vertices, triangles)
 			
 			cv2.imwrite(add_image+str(t)+".png", self.data_pixel[t,0])
@@ -513,7 +546,8 @@ class IMSVR(object):
 			
 			model_float = self.z2voxel(model_z)
 			vertices, triangles = mcubes.marching_cubes(model_float, self.sampling_threshold)
-			vertices = (vertices-1)/256-0.5
+			vertices = (vertices-0.5)/self.real_size-0.5
+			#vertices = self.optimize_mesh(vertices,model_z)
 
 			#save mesh
 			write_ply(add_out+str(t)+".ply", vertices, triangles)

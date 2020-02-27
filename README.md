@@ -26,6 +26,7 @@ Training:
 - Reduced the number of sampled points by half in the training set. Points were sampled on 256<sup>3</sup> voxels.
 - Removed data augmentation (image crops), same as [Occupancy Networks](https://github.com/autonomousvision/occupancy_networks).
 - Added coarse-to-fine sampling for inference to speed up testing.
+- Added post-processing to make the output mesh smoother. To enable, find and uncomment all *"self.optimize_mesh(vertices,model_z)"*.
 
 
 ## Citation
@@ -42,7 +43,7 @@ If you find our work useful in your research, please consider citing:
 Requirements:
 - Python 3.5 with numpy, scipy and h5py
 - [Tensorflow](https://www.tensorflow.org/get_started/os_setup)
-- [PyMCubes](https://github.com/pmneila/PyMCubes) (for matching cubes)
+- [PyMCubes](https://github.com/pmneila/PyMCubes) (for marching cubes)
 - [OpenCV-Python](https://opencv-python-tutroals.readthedocs.io/en/latest/) (for reading and writing images)
 
 Our code has been tested with Python 3.5, TensorFlow 1.8.0, CUDA 9.1 and cuDNN 7.0 on Ubuntu 16.04 and Windows 10.
@@ -59,11 +60,11 @@ For data preparation, please see directory [point_sampling](https://github.com/c
 
 We provide the ready-to-use datasets in hdf5 format, together with our pre-trained weights.
 
-- [IMAE&IMSVR](https://drive.google.com/open?id=1N-TBEgb-Rx9vkDoTJanHwkHBe3w_yqgo)
+- [IMAE&IMSVR](https://drive.google.com/open?id=1lUEkH_ixrCCCFEpsdoh33Gw3kIcSKWJQ)
 
 Backup links:
 
-- [IMAE&IMSVR (pwd: lkux)](https://pan.baidu.com/s/140GVQa1DWdRUd-z0Rg4z1Q)
+- [IMAE&IMSVR](https://pan.baidu.com/s/1sp2vCia-nziHdahR-bj71w) (pwd: qntx)
 
 We also provide pointcloud files with normal for the shapes in ShapeNet. The points are sampled from only the surface of the shapes. We use floodfilled 256<sup>3</sup> voxel files in [HSP](https://github.com/chaene/hsp) to determine whether a point is inside a shape or on its surface.
 
@@ -71,7 +72,7 @@ We also provide pointcloud files with normal for the shapes in ShapeNet. The poi
 
 Backup links:
 
-- [pointcloud_surface (pwd: ayta)](https://pan.baidu.com/s/1gRylOMEj26U0lZ8CgbQ8Lg)
+- [pointcloud_surface](https://pan.baidu.com/s/1gRylOMEj26U0lZ8CgbQ8Lg) (pwd: ayta)
 
 ## Evaluation results
 
