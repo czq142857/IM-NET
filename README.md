@@ -1,7 +1,11 @@
 # IM-NET
 The improved tensorflow code for paper "Learning Implicit Fields for Generative Shape Modeling", [Zhiqin Chen](https://www.sfu.ca/~zhiqinc/),  [Hao (Richard) Zhang](https://www.cs.sfu.ca/~haoz/).
 
-### [project page](https://www.sfu.ca/~zhiqinc/imgan/Readme.html) |   [paper](https://arxiv.org/abs/1812.02822) |   [original implementation](https://github.com/czq142857/implicit-decoder) 
+### [Project page](https://www.sfu.ca/~zhiqinc/imgan/Readme.html) |   [Paper](https://arxiv.org/abs/1812.02822)
+
+### [Original implementation](https://github.com/czq142857/implicit-decoder)
+
+### [Improved PyTorch implementation](https://github.com/czq142857/IM-NET-pytorch)
 
 
 <img src='img/teaser.png' /><img src='img/plane.gif' /><img src='img/car.gif' /><img src='img/chair.gif' /><img src='img/rifle.gif' /><img src='img/table.gif' /><img src='img/font.gif' />
@@ -42,7 +46,7 @@ If you find our work useful in your research, please consider citing:
 ## Dependencies
 Requirements:
 - Python 3.5 with numpy, scipy and h5py
-- [Tensorflow](https://www.tensorflow.org/get_started/os_setup)
+- [Tensorflow 1](https://www.tensorflow.org/get_started/os_setup)
 - [PyMCubes](https://github.com/pmneila/PyMCubes) (for marching cubes)
 - [OpenCV-Python](https://opencv-python-tutroals.readthedocs.io/en/latest/) (for reading and writing images)
 
@@ -58,7 +62,7 @@ Since our network takes point-value pairs, the voxel models require further samp
 
 For data preparation, please see directory [point_sampling](https://github.com/czq142857/IM-NET/tree/master/point_sampling).
 
-We provide the ready-to-use datasets in hdf5 format, together with our pre-trained weights.
+We provide the ready-to-use datasets in hdf5 format, together with our pre-trained network weights.
 
 - [IMAE&IMSVR](https://drive.google.com/open?id=1lUEkH_ixrCCCFEpsdoh33Gw3kIcSKWJQ)
 
@@ -94,7 +98,7 @@ python main.py --ae --train --epoch 200 --real_size 32 --batch_size_input 4096
 python main.py --ae --train --epoch 400 --real_size 64 --batch_size_input 16384
 ```
 The above commands will train the AE model 100 epochs in 16<sup>3</sup> resolution (each shape has 4096 sampled points), then 100 epochs in 32<sup>3</sup> resolution, and finally 200 epochs in 64<sup>3</sup> resolution.
-Training on the 13 categories takes about 4 days on one GeForce RTX 2080 Ti GPU.
+Training on the 13 ShapeNet categories takes about 4 days on one GeForce RTX 2080 Ti GPU.
 
 
 To train a latent-gan, after training the autoencoder, use the following command to extract the latent codes:
