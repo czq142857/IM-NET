@@ -64,11 +64,11 @@ For data preparation, please see directory [point_sampling](https://github.com/c
 
 We provide the ready-to-use datasets in hdf5 format, together with our pre-trained network weights.
 
-- [IMAE&IMSVR](https://drive.google.com/open?id=1lUEkH_ixrCCCFEpsdoh33Gw3kIcSKWJQ)
+- [IMAE&IMSVR](https://drive.google.com/open?id=158so7dnkQQNFSQTj741S3SUbuIXXRrLn)
 
 Backup links:
 
-- [IMAE&IMSVR](https://pan.baidu.com/s/1sp2vCia-nziHdahR-bj71w) (pwd: qntx)
+- [IMAE&IMSVR]() (pwd: )
 
 We also provide pointcloud files with normal for the shapes in ShapeNet. The points are sampled from only the surface of the shapes. We use floodfilled 256<sup>3</sup> voxel files in [HSP](https://github.com/chaene/hsp) to determine whether a point is inside a shape or on its surface.
 

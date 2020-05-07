@@ -155,7 +155,7 @@ class IMSVR(object):
 			h5 = lrelu(linear(h4, self.gf_dim*2, 'h5_lin'))
 			h6 = lrelu(linear(h5, self.gf_dim, 'h6_lin'))
 			h7 = linear(h6, 1, 'h7_lin')
-			#h7 = tf.maximum(tf.minimum(h7, 0.99+0.01*h7), 0.01*h7)
+			#h7 = tf.maximum(tf.minimum(h7, h7*0.01+0.99), h7*0.01)
 			h7 = tf.maximum(tf.minimum(h7, 1), 0)
 			
 			return tf.reshape(h7, [batch_size,1])
