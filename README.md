@@ -68,7 +68,7 @@ We provide the ready-to-use datasets in hdf5 format, together with our pre-train
 
 Backup links:
 
-- [IMAE&IMSVR]() (pwd: )
+- [IMAE&IMSVR](https://pan.baidu.com/s/1sC9k9qyVTdnqb-UtzB61mg) (pwd: qqrp)
 
 We also provide pointcloud files with normal for the shapes in ShapeNet. The points are sampled from only the surface of the shapes. We use floodfilled 256<sup>3</sup> voxel files in [HSP](https://github.com/chaene/hsp) to determine whether a point is inside a shape or on its surface.
 
