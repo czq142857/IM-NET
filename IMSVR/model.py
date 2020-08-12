@@ -515,6 +515,48 @@ class IMSVR(object):
 			
 			print("[sample image]")
 
+	def test_image(self, config):
+		self.saver = tf.train.Saver()
+		could_load, checkpoint_counter = self.load(self.checkpoint_dir)
+		if could_load:
+			print(" [*] Load SUCCESS")
+		else:
+			print(" [!] Load failed...")
+			return
+		
+		add_out = "./out/"
+		add_image = "./image/"
+		if not os.path.exists(add_out): os.makedirs(add_out)
+		if not os.path.exists(add_image):
+			print("ERROR: image folder does not exist: ", add_image)
+			return
+
+		test_num = 16
+		for t in range(test_num):
+			img_add = add_image+str(t)+".png"
+			print(t,test_num,img_add)
+			
+			if not os.path.exists(img_add):
+				print("ERROR: image does not exist: ", img_add)
+				return
+			imgo_ = cv2.imread(img_add, cv2.IMREAD_GRAYSCALE)
+			batch_view = cv2.resize(imgo_, (self.crop_size,self.crop_size))
+			batch_view = np.reshape(batch_view/255.0, [1,self.crop_size,self.crop_size,1])
+			
+			model_z = self.sess.run(self.sE,
+				feed_dict={
+					self.view_test: batch_view,
+				})
+			
+			model_float = self.z2voxel(model_z)
+
+			vertices, triangles = mcubes.marching_cubes(model_float, self.sampling_threshold)
+			vertices = (vertices-0.5)/self.real_size-0.5
+			#vertices = self.optimize_mesh(vertices,model_z)
+			write_ply(add_out+str(t)+".ply", vertices, triangles)
+			
+			print("[sample image]")
+
 	def test_all(self, config):
 		self.saver = tf.train.Saver()
 		could_load, checkpoint_counter = self.load(self.checkpoint_dir)
